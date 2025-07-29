@@ -1,0 +1,16 @@
+first_name,last_name,company_name,title,revenue,industry,email
+Alice,Johnson,TechWave,CEO,200000000,Technology,alice.johnson@techwave.com
+Bob,Smith,HealthCorp,CFO,500000000,Healthcare,bob.smith@healthcorp.com
+Charlie,Lee,IndustriWorks,VP Operations,75000000,Manufacturing,charlie.lee@industriworks.com
+Dana,White,SoftSolutions,CTO,120000000,Software,dana.white@softsolutions.com
+Eli,Brown,BiotechLabs,Director of Finance,45000000,Biotech,eli.brown@biotechlabs.com
+Fiona,Grey,GreenEnergy,Manager,8000000,Energy,fiona.grey@greenenergy.com
+George,Harris,TechWave,CEO,200000000,Technology,alice.johnson@techwave.com
+Hannah,Wong,HealthCorp,VP Sales,90000000,Healthcare,hannah.wong@healthcorp.com
+Ian,Miller,SoftSolutions,CFO,120000000,Software,ian.miller@softsolutions.com
+Jane,Rodriguez,BiotechLabs,CEO,45000000,Biotech,jane.rodriguez@biotechlabs.com
+Kyle,Davis,GreenEnergy,Director IT,8000000,Energy,kyle.davis@greenenergy.com
+Liam,Nguyen,TechWave,Manager,200000000,Technology,liam.nguyen@techwave.com
+Mia,Patel,IndustriWorks,CFO,75000000,Manufacturing,mia.patel@industriworks.com
+Nina,Kim,HealthCorp,Director Marketing,500000000,Healthcare,nina.kim@healthcorp.com
+Oscar,Clark,SoftSolutions,VP Product,120000000,Software,oscar.clark@softsolutions.com

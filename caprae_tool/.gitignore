@@ -1,0 +1,16 @@
+
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+
+# Dist / archives
+*.zip
+
+# Virtual envs
+.env
+.venv
+
+# OS swap / metadata
+.DS_Store
+Thumbs.db
+
