@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caprae Capital - Lead Generation Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo-section h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-section p {
+            color: #666;
+            margin-top: 5px;
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .control-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+        }
+
+        .source-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .leads-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .lead-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .lead-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .lead-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .lead-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        .lead-score {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .lead-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .lead-detail {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .charts-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-container {
+            margin-bottom: 30px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                text-align: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .source-tabs {
+                justify-content: center;
+            }
+            
+            .filters {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .file-upload-area {
+            border: 2px dashed #667eea;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            background: rgba(102, 126, 234, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload-area:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .file-upload-area.dragover {
+            background: rgba(102, 126, 234, 0.15);
+            border-color: #764ba2;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .export-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e1e5e9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo-section">
+                    <h1>Caprae Capital</h1>
+                    <p>Lead Generation & Enrichment Dashboard</p>
+                </div>
+                <div class="export-section">
+                    <button class="btn btn-success" onclick="exportLeads()">
+                         Export Leads
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearData()">
+                        Clear Data
+                   </button>
+               </div>
+           </div>
+       </header>
+
+       <div class="stats-grid">
+           <div class="stat-card">
+               <div class="stat-number" id="totalLeads">0</div>
+               <div class="stat-label">Total Leads</div>
+           </div>
+           <div class="stat-card">
+               <div class="stat-number" id="avgScore">0</div>
+               <div class="stat-label">Avg Score</div>
+           </div>
+           <div class="stat-card">
+               <div class="stat-number" id="highQuality">0</div>
+               <div class="stat-label">High Quality (Score 15+)</div>
+           </div>
+           <div class="stat-card">
+               <div class="stat-number" id="enrichedLeads">0</div>
+               <div class="stat-label">Enriched Leads</div>
+           </div>
+       </div>
+
+       <div class="main-content">
+           <div class="left-panel">
+               <div class="control-panel">
+                   <h2 class="section-title">🔍 Lead Generation</h2>
+                   
+                   <div class="source-tabs">
+                       <div class="tab active" data-source="apollo">Apollo</div>
+                       <div class="tab" data-source="linkedin">LinkedIn</div>
+                       <div class="tab" data-source="crunchbase">Crunchbase</div>
+                       <div class="tab" data-source="google_maps">Google Maps</div>
+                   </div>
+
+                   <div class="input-group">
+                       <label for="searchQuery">Search Query</label>
+                       <input type="text" id="searchQuery" placeholder="e.g., 'SaaS CEOs in San Francisco'" />
+                   </div>
+
+                   <button class="btn" onclick="scrapeLeads()">
+                        Generate Leads
+                   </button>
+
+                   <div class="loading" id="scrapeLoading">
+                       <div class="spinner"></div>
+                       Generating leads...
+                   </div>
+
+                   <hr style="margin: 30px 0; border: 1px solid #e1e5e9;">
+
+                   <h3 class="section-title"> Upload CSV</h3>
+                   <div class="file-upload-area" onclick="document.getElementById('fileInput').click()">
+                       <div style="font-size: 2rem; margin-bottom: 10px;">📂</div>
+                       <div>Click to upload or drag & drop your CSV file</div>
+                       <div style="font-size: 0.9rem; color: #666; margin-top: 5px;">
+                           Expected columns: first_name, last_name, company_name, title, revenue, industry, email
+                       </div>
+                   </div>
+                   <input type="file" id="fileInput" accept=".csv" onchange="uploadFile(this)">
+               </div>
+
+               <div class="control-panel">
+                   <h2 class="section-title"> Filters & Search</h2>
+                   
+                   <div class="filters">
+                       <div class="input-group">
+                           <label for="minScore">Min Score</label>
+                           <input type="number" id="minScore" min="0" max="30" value="0" onchange="filterLeads()">
+                       </div>
+                       <div class="input-group">
+                           <label for="industryFilter">Industry</label>
+                           <input type="text" id="industryFilter" placeholder="e.g., Technology" onchange="filterLeads()">
+                       </div>
+                       <div class="input-group">
+                           <label for="sourceFilter">Source</label>
+                           <select id="sourceFilter" onchange="filterLeads()">
+                               <option value="">All Sources</option>
+                               <option value="Apollo">Apollo</option>
+                               <option value="LinkedIn">LinkedIn</option>
+                               <option value="Crunchbase">Crunchbase</option>
+                               <option value="Google Maps">Google Maps</option>
+                               <option value="CSV Upload">CSV Upload</option>
+                           </select>
+                       </div>
+                   </div>
+               </div>
+
+               <div class="leads-container">
+                   <h2 class="section-title">👥 Generated Leads</h2>
+                   <div id="leadsContainer">
+                       <div style="text-align: center; color: #666; padding: 40px;">
+                           Generate leads or upload a CSV to get started
+                       </div>
+                   </div>
+               </div>
+           </div>
+
+           <div class="charts-panel">
+               <h2 class="section-title"> Analytics</h2>
+               
+               <div class="chart-container">
+                   <h3>Score Distribution</h3>
+                   <canvas id="scoreChart" width="400" height="200"></canvas>
+               </div>
+               
+               <div class="chart-container">
+                   <h3>Top Industries</h3>
+                   <canvas id="industryChart" width="400" height="200"></canvas>
+               </div>
+               
+               <div class="chart-container">
+                   <h3>Source Breakdown</h3>
+                   <canvas id="sourceChart" width="400" height="200"></canvas>
+               </div>
+           </div>
+       </div>
+   </div>
+
+   <script>
+    let currentSource = 'apollo';
+    let allLeads = [];
+    let charts = {};
+    let selectedLeads = new Set(); // Track selected leads for bulk operations
+
+    // Initialize tabs
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            currentSource = this.dataset.source;
+        });
+    });
+
+    // File upload drag and drop (keeping existing code)
+    const fileUploadArea = document.querySelector('.file-upload-area');
+    fileUploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        fileUploadArea.classList.add('dragover');
+    });
+
+    fileUploadArea.addEventListener('dragleave', () => {
+        fileUploadArea.classList.remove('dragover');
+    });
+
+    fileUploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        fileUploadArea.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            document.getElementById('fileInput').files = files;
+            uploadFile(document.getElementById('fileInput'));
+        }
+    });
+
+    // Enhanced Clear Data Function with Real API Implementation
+    function clearData() {
+        if (confirm('Are you sure you want to clear all lead data? This action cannot be undone.')) {
+            showLoading('Clearing all data...');
+            
+            fetch('/api/clear', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideLoading();
+                if (data.success) {
+                    showAlert(data.message, 'success');
+                    // Clear the frontend data
+                    allLeads = [];
+                    selectedLeads.clear();
+                    // Refresh the display
+                    refreshData();
+                    // Clear the leads container
+                    document.getElementById('leadsContainer').innerHTML = 
+                        '<div style="text-align: center; color: #666; padding: 40px;">Generate leads or upload a CSV to get started</div>';
+                } else {
+                    showAlert(`Error: ${data.error}`, 'error');
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                showAlert(`Network error: ${error.message}`, 'error');
+            });
+        }
+    }
+
+    // Delete Single Lead Function
+    function deleteLead(leadIndex, leadName) {
+        if (confirm(`Are you sure you want to delete ${leadName}?`)) {
+            fetch(`/api/delete-lead/${leadIndex}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert(data.message, 'success');
+                    refreshData();
+                } else {
+                    showAlert(`Error: ${data.error}`, 'error');
+                }
+            })
+            .catch(error => {
+                showAlert(`Network error: ${error.message}`, 'error');
+            });
+        }
+    }
+
+    // Bulk Delete Selected Leads Function
+    function bulkDeleteSelected() {
+        if (selectedLeads.size === 0) {
+            showAlert('No leads selected for deletion', 'error');
+            return;
+        }
+
+        if (confirm(`Are you sure you want to delete ${selectedLeads.size} selected leads?`)) {
+            showLoading('Deleting selected leads...');
+            
+            fetch('/api/bulk-delete', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    indices: Array.from(selectedLeads)
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideLoading();
+                if (data.success) {
+                    showAlert(data.message, 'success');
+                    selectedLeads.clear();
+                    refreshData();
+                } else {
+                    showAlert(`Error: ${data.error}`, 'error');
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                showAlert(`Network error: ${error.message}`, 'error');
+            });
+        }
+    }
+
+    // Toggle Lead Selection
+    function toggleLeadSelection(index, checkbox) {
+        if (checkbox.checked) {
+            selectedLeads.add(index);
+        } else {
+            selectedLeads.delete(index);
+        }
+        updateBulkActionButtons();
+    }
+
+    // Select All Leads
+    function selectAllLeads(selectAll) {
+        const checkboxes = document.querySelectorAll('.lead-checkbox');
+        checkboxes.forEach((checkbox, index) => {
+            checkbox.checked = selectAll;
+            if (selectAll) {
+                selectedLeads.add(index);
+            } else {
+                selectedLeads.delete(index);
+            }
+        });
+        updateBulkActionButtons();
+    }
+
+    // Update Bulk Action Buttons Visibility
+    function updateBulkActionButtons() {
+        const bulkActions = document.getElementById('bulkActions');
+        const selectedCount = document.getElementById('selectedCount');
+        
+        if (selectedLeads.size > 0) {
+            bulkActions.style.display = 'block';
+            selectedCount.textContent = selectedLeads.size;
+        } else {
+            bulkActions.style.display = 'none';
+        }
+    }
+
+    // Enhanced Display Leads Function with Selection and Delete Options
+    function displayLeads(leads) {
+        allLeads = leads; // Store leads globally
+        const container = document.getElementById('leadsContainer');
+        
+        if (leads.length === 0) {
+            container.innerHTML = '<div style="text-align: center; color: #666; padding: 40px;">No leads match your criteria</div>';
+            return;
+        }
+
+        // Add bulk action controls
+        const bulkActionsHtml = `
+            <div class="bulk-actions" style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 10px;">
+                <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                    <label style="display: flex; align-items: center; gap: 5px; font-weight: 500;">
+                        <input type="checkbox" onchange="selectAllLeads(this.checked)" style="transform: scale(1.2);">
+                        Select All
+                    </label>
+                    <div id="bulkActions" style="display: none;">
+                        <span id="selectedCount">0</span> selected
+                        <button class="btn btn-secondary" onclick="bulkDeleteSelected()" style="margin-left: 10px; padding: 8px 16px; font-size: 0.9rem;">
+                             Delete Selected
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        const leadsHtml = leads.map((lead, index) => `
+            <div class="lead-card">
+                <div class="lead-header">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <input type="checkbox" class="lead-checkbox" onchange="toggleLeadSelection(${index}, this)" style="transform: scale(1.2);">
+                        <div class="lead-name">${lead.first_name} ${lead.last_name}</div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div class="lead-score">Score: ${lead.score}</div>
+                        <button class="btn" onclick="deleteLead(${index}, '${lead.first_name} ${lead.last_name}')" 
+                                style="background: #dc3545; padding: 5px 10px; font-size: 0.8rem;">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+                <div style="font-weight: 500; color: #667eea; margin-bottom: 8px;">
+                    ${lead.title} at ${lead.company_name}
+                </div>
+                <div class="lead-details">
+                    <div class="lead-detail"><strong>Industry:</strong> ${lead.industry}</div>
+                    <div class="lead-detail"><strong>Revenue:</strong> $${formatRevenue(lead.revenue)}</div>
+                    <div class="lead-detail"><strong>Email:</strong> ${lead.email}</div>
+                    <div class="lead-detail"><strong>Source:</strong> ${lead.source}</div>
+                    ${lead.phone ? `<div class="lead-detail"><strong>Phone:</strong> ${lead.phone}</div>` : ''}
+                    ${lead.location ? `<div class="lead-detail"><strong>Location:</strong> ${lead.location}</div>` : ''}
+                </div>
+                ${lead.email_template ? `
+                    <div style="margin-top: 15px;">
+                        <button class="btn" style="font-size: 0.9rem; padding: 8px 16px;" onclick="showEmailTemplate('${lead.first_name}', \`${lead.email_template.replace(/`/g, '\\`').replace(/\n/g, '\\n')}\`)">
+                             View Email Template
+                        </button>
+                    </div>
+                ` : ''}
+            </div>
+        `).join('');
+
+        container.innerHTML = bulkActionsHtml + leadsHtml;
+    }
+
+    // Loading and Alert Helper Functions
+    function showLoading(message) {
+        const loadingDiv = document.createElement('div');
+        loadingDiv.id = 'globalLoading';
+        loadingDiv.className = 'loading';
+        loadingDiv.style.display = 'block';
+        loadingDiv.style.position = 'fixed';
+        loadingDiv.style.top = '50%';
+        loadingDiv.style.left = '50%';
+        loadingDiv.style.transform = 'translate(-50%, -50%)';
+        loadingDiv.style.background = 'rgba(255, 255, 255, 0.95)';
+        loadingDiv.style.padding = '30px';
+        loadingDiv.style.borderRadius = '15px';
+        loadingDiv.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.2)';
+        loadingDiv.style.zIndex = '9999';
+        loadingDiv.innerHTML = `
+            <div class="spinner"></div>
+            ${message}
+        `;
+        document.body.appendChild(loadingDiv);
+    }
+
+    function hideLoading() {
+        const loading = document.getElementById('globalLoading');
+        if (loading) {
+            loading.remove();
+        }
+    }
+
+    // Keep all existing functions (scrapeLeads, uploadFile, filterLeads, etc.)
+    function scrapeLeads() {
+        const query = document.getElementById('searchQuery').value.trim();
+        if (!query) {
+            showAlert('Please enter a search query', 'error');
+            return;
+        }
+
+        const loading = document.getElementById('scrapeLoading');
+        loading.style.display = 'block';
+
+        fetch('/api/scrape', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                source: currentSource,
+                query: query
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            loading.style.display = 'none';
+            if (data.success) {
+                showAlert(`Successfully generated ${data.count} leads from ${currentSource}!`, 'success');
+                refreshData();
+            } else {
+                showAlert(`Error: ${data.error}`, 'error');
+            }
+        })
+        .catch(error => {
+            loading.style.display = 'none';
+            showAlert(`Network error: ${error.message}`, 'error');
+        });
+    }
+
+    function uploadFile(input) {
+        const file = input.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        fetch('/api/upload', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert(`Successfully processed ${data.count} leads from CSV!`, 'success');
+                refreshData();
+            } else {
+                showAlert(`Error: ${data.error}`, 'error');
+            }
+        })
+        .catch(error => {
+            showAlert(`Upload error: ${error.message}`, 'error');
+        });
+    }
+
+    function filterLeads() {
+        const minScore = document.getElementById('minScore').value;
+        const industry = document.getElementById('industryFilter').value;
+        const source = document.getElementById('sourceFilter').value;
+
+        const params = new URLSearchParams();
+        if (minScore > 0) params.append('min_score', minScore);
+        if (industry) params.append('industry', industry);
+        if (source) params.append('source', source);
+
+        fetch(`/api/leads?${params.toString()}`)
+            .then(response => response.json())
+            .then(data => {
+                displayLeads(data.leads);
+            });
+    }
+
+    function refreshData() {
+        // Clear selections when refreshing
+        selectedLeads.clear();
+        
+        // Refresh leads
+        filterLeads();
+        
+        // Refresh stats and charts
+        fetch('/api/stats')
+            .then(response => response.json())
+            .then(data => {
+                updateStats(data);
+                updateCharts(data);
+            });
+    }
+
+    function formatRevenue(revenue) {
+        const num = parseFloat(revenue.replace(/[^0-9.]/g, ''));
+        if (num >= 1000000000) return (num / 1000000000).toFixed(1) + 'B';
+        if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+        if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+        return num.toString();
+    }
+
+    function showEmailTemplate(name, template) {
+        // Create a modal for better email template display
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.5); z-index: 10000; display: flex; 
+            align-items: center; justify-content: center; padding: 20px;
+        `;
+        
+        modal.innerHTML = `
+            <div style="background: white; border-radius: 15px; padding: 30px; max-width: 600px; width: 100%; max-height: 80vh; overflow-y: auto;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="margin: 0; color: #333;">Email Template for ${name}</h3>
+                    <button onclick="this.closest('div').parentElement.remove()" style="background: #dc3545; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer;">×</button>
+                </div>
+                <pre style="white-space: pre-wrap; font-family: inherit; background: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #e1e5e9;">${template.replace(/\\n/g, '\n')}</pre>
+                <div style="margin-top: 20px; text-align: right;">
+                    <button onclick="navigator.clipboard.writeText(\`${template.replace(/`/g, '\\`').replace(/\\n/g, '\n')}\`); showAlert('Email template copied to clipboard!', 'success')" class="btn">
+                         Copy to Clipboard
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+    }
+
+    function updateStats(data) {
+        document.getElementById('totalLeads').textContent = data.total_leads;
+        document.getElementById('avgScore').textContent = data.avg_score;
+        
+        // Calculate high quality leads (score 15+)
+        const highQuality = data.score_distribution['16-20'] + data.score_distribution['21+'];
+        document.getElementById('highQuality').textContent = highQuality;
+        document.getElementById('enrichedLeads').textContent = data.total_leads;
+    }
+
+    function updateCharts(data) {
+        // Score Distribution Chart
+        if (charts.scoreChart) charts.scoreChart.destroy();
+        const scoreCtx = document.getElementById('scoreChart').getContext('2d');
+        charts.scoreChart = new Chart(scoreCtx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(data.score_distribution),
+                datasets: [{
+                    label: 'Number of Leads',
+                    data: Object.values(data.score_distribution),
+                    backgroundColor: 'rgba(102, 126, 234, 0.7)',
+                    borderColor: 'rgba(102, 126, 234, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Industry Chart
+        if (charts.industryChart) charts.industryChart.destroy();
+        const industryCtx = document.getElementById('industryChart').getContext('2d');
+        charts.industryChart = new Chart(industryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: data.top_industries.map(item => item[0]),
+                datasets: [{
+                    data: data.top_industries.map(item => item[1]),
+                    backgroundColor: [
+                        'rgba(102, 126, 234, 0.8)',
+                        'rgba(118, 75, 162, 0.8)',
+                        'rgba(240, 147, 251, 0.8)',
+                        'rgba(245, 87, 108, 0.8)',
+                        'rgba(79, 172, 254, 0.8)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // Source Chart
+        if (charts.sourceChart) charts.sourceChart.destroy();
+        const sourceCtx = document.getElementById('sourceChart').getContext('2d');
+        charts.sourceChart = new Chart(sourceCtx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(data.source_breakdown),
+                datasets: [{
+                    data: Object.values(data.source_breakdown),
+                    backgroundColor: [
+                        'rgba(102, 126, 234, 0.8)',
+                        'rgba(118, 75, 162, 0.8)',
+                        'rgba(240, 147, 251, 0.8)',
+                        'rgba(245, 87, 108, 0.8)',
+                        'rgba(79, 172, 254, 0.8)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    }
+
+    function exportLeads() {
+        window.location.href = '/api/export';
+    }
+
+    function showAlert(message, type) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type}`;
+        alertDiv.textContent = message;
+        
+        document.querySelector('.container').insertBefore(alertDiv, document.querySelector('header').nextSibling);
+        
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 5000);
+    }
+
+    // Initialize dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+        refreshData();
+    });
+</script>
+</body>
+</html>
